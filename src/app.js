@@ -1,18 +1,31 @@
 const express = require("express");
+
 const app = express();
 
-app.use("/", (req, res) => {
-  res.send("Hello from the dashboard");
+// Handle Auth Middleware for all GET, POST,... requests
+app.use("/admin", (req, res, next) => {
+  console.log("Admin auth is getting checked!!");
+  const token = "xyz";
+  const isAdminAuthorized = token === "xyz";
+  if (!isAdminAuthorized) {
+    res.status(401).send("Unauthorized Request");
+  } else {
+    next();
+  }
 });
 
-app.use("/test", () => {
-  res.send("Testing Page.");
+app.get("/user", (req, res) => {
+  res.send("User Data Sent");
 });
 
-app.use("run", (req, res) => {
-  res.send("Running Page.");
+app.get("/admin/getAllData", (req, res) => {
+  res.send("All Data Sent");
+});
+
+app.get("/admin/deleteUser", (req, res) => {
+  res.send("Deleted a User");
 });
 
 app.listen(7777, () => {
-  console.log("Server successfully running on port 7777");
+  console.log("Server running successfully!");
 });
